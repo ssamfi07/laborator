@@ -38,10 +38,8 @@ namespace Students.Controllers
                         {
                             case null:
                                 return NotFound();
-                                break;
                             default: 
                                 return Ok(s);
-                                break;
                         };
                     }
                 ))();
@@ -56,7 +54,28 @@ namespace Students.Controllers
                     _students.addStudent(studentBody);
                     return CreatedAtAction(nameof(GetStudentById), new {id = studentBody.Id}, studentBody);
                 }))(),
-                false => BadRequest("Student already exists.")
+                false => BadRequest("Student already exists")
+            };
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStudent([FromBody] Students.Models.Student studentBody, [FromRoute] string id)
+            => (!(_students.checkStudent(studentBody)) && _students.checkId(id)) switch
+            {
+                true => ((Func<IActionResult>)(() => 
+                {
+                    // or HERE
+                    _students.updateStudent(id, studentBody);
+                    // display the newly updated student
+                    return CreatedAtAction(nameof(GetStudentById), new {id = studentBody.Id}, studentBody);
+                }))(),
+                false => BadRequest("Student Id mismatch or student info already exists")
+            };
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudent([FromRoute] string id)
+            => _students.checkId(id) switch
+            {
+                true => Ok(_students.deleteStudent(id)),
+                false => NotFound("Student not found")
             };
     }
 }
