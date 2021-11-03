@@ -20,10 +20,10 @@ namespace Api
         static async Task AddStudent()
         {
             var student = new Student("UPT","354");
-            student.Nume = "Popescu";
+            student.Nume = "Ionescu";
             student.Prenume = "Andrei";
             student.An = 4;
-            student.Nr = "0783809342";
+            student.Nr = "0769696969";
             student.Facultate = "AC";
 
             var insertOperation = TableOperation.Insert(student);
